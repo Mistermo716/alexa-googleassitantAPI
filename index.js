@@ -14,9 +14,24 @@ app.get('/:agentType/:user_id/:query', (req, res) => {
   let results = pg('favs')
     .where({ user_id })
     .then(results => {
-      return results;
+      res.json(results);
     });
   console.log(results);
+});
+
+app.delete('/:user_id/:query', (req, res) => {
+  const { user_id, query } = req.params;
+  pg('favs')
+    .where({ user_id, query })
+    .del()
+    .then(result => {
+      res.json({
+        messageToResponse: `${query} was removed from your highlights list`,
+      });
+    })
+    .catch(err => {
+      return err;
+    });
 });
 
 app.post('/:user_type/:user_id/:query', (req, res) => {
@@ -37,18 +52,17 @@ app.post('/:user_type/:user_id/:query', (req, res) => {
       pg('users')
         .insert({ user_id, user_type })
         .then(result => {
-          res.send(result);
+          return;
         });
-    }
-    if (userResult[0]) {
-      console.log('user exists');
     }
   }
 
   pg('favs')
     .insert({ user_id, query })
     .then(results => {
-      return;
+      res.json({
+        messageToResponse: `${query} has been added to your highlights list`,
+      });
     })
     .catch(err => {
       return err;
