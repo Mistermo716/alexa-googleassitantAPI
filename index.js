@@ -2,21 +2,37 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config();
 
-var pg = require('knex')({
+const pg = require('knex')({
   client: 'pg',
   connection: process.env.DATABASE_URL,
   searchPath: ['knex', 'public'],
 });
 
-app.get('/:agentType/:user_id/:query', (req, res) => {
-  const { agentType, user_id, query } = req.params;
+app.get('/:user_id', (req, res) => {
+  const { user_id } = req.params;
 
-  let results = pg('favs')
+  let resultsArr = [];
+  pg('favs')
     .where({ user_id })
     .then(results => {
-      res.json(results);
+      return processInfo(results);
+    })
+    .catch(err => {
+      return err;
     });
-  console.log(results);
+
+  function processInfo(value) {
+    value.forEach(value => {
+      resultsArr.push(value);
+    });
+
+    if (!resultsArr[0]) {
+      res.json({
+        message: 'You have not added anything to your highlight list',
+        help: 'You can say add name of the highlight .... to highlights',
+      });
+    }
+  }
 });
 
 app.delete('/:user_id/:query', (req, res) => {
