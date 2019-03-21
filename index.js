@@ -88,7 +88,7 @@ app.post('/:user_type/:user_id/:query', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send({ work: 'this app is working' });
+  res.body({ work: 'this app is working' });
 });
 
 app.listen(port);
