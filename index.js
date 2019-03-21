@@ -8,6 +8,8 @@ const pg = require('knex')({
   searchPath: ['knex', 'public'],
 });
 
+const port = process.env.PORT || 8080;
+
 app.get('/:user_id', (req, res) => {
   const { user_id } = req.params;
 
@@ -86,10 +88,7 @@ app.post('/:user_type/:user_id/:query', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  pg('users').then(results => {
-    console.log(results[0].user_id);
-  });
-  res.send({ work: 'not working' });
+  res.send({ work: 'this app is working' });
 });
 
-app.listen(3000);
+app.listen(port);
