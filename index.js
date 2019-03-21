@@ -8,7 +8,7 @@ const pg = require('knex')({
   searchPath: ['knex', 'public'],
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5000;
 
 app.get('/:user_id', (req, res) => {
   const { user_id } = req.params;
